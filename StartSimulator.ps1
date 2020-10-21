@@ -1,0 +1,1 @@
+& .\CarlaUE4.exe -windowed -carla-server
