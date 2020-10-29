@@ -9,7 +9,7 @@ else{
 
 if($linux){
     foreach($file in $files){
-        pydoc3 -w `"$PSScriptRoot\$file`"
+        pydoc3 -w `"$file`"
     }
     $docPath = "$PSScriptRoot/GeneratedDocumentation"
 }
@@ -30,12 +30,13 @@ $htmlFiles = Get-ChildItem $PSScriptRoot -Filter "*.html"
 
 if($linux){
     foreach($file in $htmlFiles){
-        Move-Item "$PSScriptRoot/$file" "$docPath/$file"
+	$targetfilename = $docpath + "/" + $file.Name
+	Move-Item "$file" $targetfilename
     }
 }
 else{
     foreach($file in $htmlFiles){
-        Move-Item "$PSScriptRoot\$file" "$docPath\$file"
+	Move-Item "$PSScriptRoot\$file" "$docPath\$file"
     }
 }
 
