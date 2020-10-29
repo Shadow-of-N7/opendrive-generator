@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 
 import ValueValidators
-import csv
 import datetime
-from xml.etree.ElementTree import Element, SubElement, Comment, tostring, ElementTree
+from xml.etree.ElementTree import Element, SubElement # , Comment, tostring, ElementTree
 import xml.dom.minidom
-import xml.etree.ElementTree as ET
+import xml.etree.ElementTree as Et
 from typing import List
 
 """
@@ -61,7 +60,7 @@ def generate(out_path):
     road.set('length', str(street_length))
 
     # Stringify
-    xml_string = ET.tostring(root, encoding='unicode')
+    xml_string = Et.tostring(root, encoding='unicode')
 
     # Prettify
     dom = xml.dom.minidom.parseString(xml_string)
@@ -84,7 +83,7 @@ def generate_line(s: float, x: float, y: float, hdg: float, length: float) -> No
 
     ValueValidators.validate_greater_equal_zero(s)
     ValueValidators.validate_greater_zero(length)
-    line = create_geometry(s, x, y, hdg, length)
+    line = __create_geometry(s, x, y, hdg, length)
     SubElement(line, 'line')
     reference_line_parts.append(line)
 
@@ -102,7 +101,7 @@ def generate_arc(s: float, x: float, y: float, hdg: float, length: float, curvat
     ValueValidators.validate_greater_equal_zero(s)
     ValueValidators.validate_greater_zero(length)
 
-    arc = create_geometry(s, x, y, hdg, length)
+    arc = __create_geometry(s, x, y, hdg, length)
     sub_arc = SubElement(arc, 'arc')
     sub_arc.set('curvature', str(curvature))
     reference_line_parts.append(arc)
@@ -123,14 +122,14 @@ def generate_spiral(s: float, x: float, y: float, hdg: float, length: float, cur
     ValueValidators.validate_greater_equal_zero(s)
     ValueValidators.validate_greater_zero(length)
 
-    spiral = create_geometry(s, x, y, hdg, length)
+    spiral = __create_geometry(s, x, y, hdg, length)
     sub_spiral = SubElement(spiral, 'spiral')
     sub_spiral.set('curvStart', str(curv_start))
     sub_spiral.set('curvEnd', str(curv_end))
     reference_line_parts.append(spiral)
 
 
-def create_geometry(s, x, y, hdg, length) -> Element:
+def __create_geometry(s, x, y, hdg, length) -> Element:
     element = Element('geometry')
     element.set('s', str(s))
     element.set('x', str(x))
