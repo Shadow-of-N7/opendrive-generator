@@ -81,12 +81,7 @@ def generate_line(s: float, x: float, y: float, hdg: float, length: float) -> No
 
     ValueValidators.validate_greater_equal_zero(s)
     ValueValidators.validate_greater_zero(length)
-    line = Element('geometry')
-    line.set('s', str(s))
-    line.set('x', str(x))
-    line.set('y', str(y))
-    line.set('hdg', str(hdg))
-    line.set('length', str(length))
+    line = create_geometry(s, x, y, hdg, length)
     SubElement(line, 'line')
     reference_line_parts.append(line)
 
@@ -104,6 +99,11 @@ def generate_arc(s: float, x: float, y: float, hdg: float, length: float, curvat
     ValueValidators.validate_greater_equal_zero(s)
     ValueValidators.validate_greater_zero(length)
 
+    arc = create_geometry(s, x, y, hdg, length)
+    sub_arc = SubElement(arc, 'arc')
+    sub_arc.set('curvature', str(curvature))
+    reference_line_parts.append(arc)
+
 
 def generate_spiral(s: float, x: float, y: float, hdg: float, length: float, curv_start: float, curv_end: float) \
         -> None:
@@ -119,3 +119,19 @@ def generate_spiral(s: float, x: float, y: float, hdg: float, length: float, cur
 
     ValueValidators.validate_greater_equal_zero(s)
     ValueValidators.validate_greater_zero(length)
+
+    spiral = create_geometry(s, x, y, hdg, length)
+    sub_spiral = SubElement(spiral, 'spiral')
+    sub_spiral.set('curvStart', str(curv_start))
+    sub_spiral.set('curvEnd', str(curv_end))
+    reference_line_parts.append(spiral)
+
+
+def create_geometry(s, x, y, hdg, length) -> Element:
+    element = Element('geometry')
+    element.set('s', str(s))
+    element.set('x', str(x))
+    element.set('y', str(y))
+    element.set('hdg', str(hdg))
+    element.set('length', str(length))
+    return element
