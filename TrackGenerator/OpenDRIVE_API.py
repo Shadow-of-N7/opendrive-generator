@@ -44,6 +44,7 @@ def generate(out_path: str) -> None:
     header.set('west', '0.0')
 
     # Road element
+    # Center line
     road = SubElement(root, 'road')
     road.set('id', '1')
     road.set('junction', "-1")
@@ -66,6 +67,55 @@ def generate(out_path: str) -> None:
         planview.append(i)
         street_length += int(i.get(key='length'))
     road.set('length', str(street_length))
+
+    # Lanes
+    lanes = SubElement(road, 'lanes')
+    lane_offset = SubElement(lanes, 'laneOffset')
+    lane_offset.set('s', '0.0')
+    lane_offset.set('a', '0.0')
+    lane_offset.set('b', '0.0')
+    lane_offset.set('c', '0.0')
+    lane_offset.set('d', '0.0')
+
+    # Lane section
+    lane_section = SubElement(lanes, 'laneSection')
+    lane_section.set('s', '0.0')
+
+    left = SubElement(lane_section, 'left')
+    center = SubElement(lane_section, 'center')
+    right = SubElement(lane_section, 'right')
+
+    left_lane = SubElement(left, 'lane')
+    left_lane.set('id', '1')
+    left_lane.set('type', 'driving')
+    left_lane.set('level', 'false')
+    SubElement(left_lane, 'link')
+    left_width = SubElement(left_lane, 'width')
+    left_width.set('sOffset', '0.0')
+    left_width.set('a', '4.0')
+    left_width.set('b', '0.0')
+    left_width.set('c', '0.0')
+    left_width.set('d', '0.0')
+
+    #TODO CENTER
+    center_lane = SubElement(center, 'lane')
+    center_lane.set('id', '0')
+    center_lane.set('type', 'none')
+    center_lane.set('level', 'false')
+    SubElement(center_lane, 'link')
+
+    right_lane = SubElement(right, 'lane')
+    right_lane.set('id', '-1')
+    right_lane.set('type', 'driving')
+    right_lane.set('level', 'false')
+    SubElement(right_lane, 'link')
+    right_width = SubElement(right_lane, 'width')
+    right_width.set('sOffset', '0.0')
+    right_width.set('a', '4.0')
+    right_width.set('b', '0.0')
+    right_width.set('c', '0.0')
+    right_width.set('d', '0.0')
+
 
     # Stringify
     xml_string = Et.tostring(root, encoding='unicode')
