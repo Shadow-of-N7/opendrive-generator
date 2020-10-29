@@ -1,17 +1,73 @@
 # -*- coding: utf-8 -*-
 
 import ValueValidators
+import csv
+import datetime
+from xml.etree.ElementTree import Element, SubElement, Comment, tostring, ElementTree
+import xml.dom.minidom
+import xml.etree.ElementTree as ET
 
 """
 General Stuff:
 The basic functions require 64-bit precision, which Pythons 'float' data type yields.
+Find help regarding XML generation: https://pymotw.com/2/xml/etree/ElementTree/create.html
 """
 
+# Stores the ref line parts as XML elements
+reference_line_parts = []
 
-def generate():
+
+def generate(out_path):
     """
     Generates the actual .xodr file.
     """
+    # Root element
+    root = Element('OpenDRIVE')
+
+    # Header element
+    header = SubElement(root, 'header')
+    header.set('revMajor', '1')
+    header.set('revMinor', '6')
+    header.set('name', '')
+    header.set('version', '1.00')
+    header.set('date', str(datetime.datetime.now()))
+    header.set('north', '0.0')
+    header.set('south', '0.0')
+    header.set('east', '0.0')
+    header.set('west', '0.0')
+
+    # Road element
+    road = SubElement(root, 'road')
+    road.set('id', '1')
+
+    # Link element
+    SubElement(road, 'link')
+
+    # Type element
+    road_type = SubElement(road, 'type')
+    road_type.set('s', '0.0') # TODO: Set s based on real values
+    road_type.set('type', 'rural')
+    road_type.set('country', 'DE')
+
+    # PlanView element - Reference line starts here
+    planview = SubElement(road, 'planView')
+
+    # Append all ref line parts to the planView element
+    for i in reference_line_parts:
+        planview.append(i)
+        # TODO: Sum up all the lengths and insert them into the road alement
+
+    # Stringify
+    xml_string = ET.tostring(root, encoding='unicode')
+
+    # Prettify
+    dom = xml.dom.minidom.parseString(xml_string)
+    pretty_xml_string = dom.toprettyxml()
+
+    # Write to file
+    file = open(out_path, 'w+')
+    file.write(pretty_xml_string)
+    file.close()
 
 
 def generate_line(s: float, x: float, y: float, hdg: float, length: float) -> None:
@@ -25,6 +81,14 @@ def generate_line(s: float, x: float, y: float, hdg: float, length: float) -> No
 
     ValueValidators.validate_greater_equal_zero(s)
     ValueValidators.validate_greater_zero(length)
+    line = Element('geometry')
+    line.set('s', str(s))
+    line.set('x', str(x))
+    line.set('y', str(y))
+    line.set('hdg', str(hdg))
+    line.set('length', str(length))
+    SubElement(line, 'line')
+    reference_line_parts.append(line)
 
 
 def generate_arc(s: float, x: float, y: float, hdg: float, length: float, curvature: float) -> None:
