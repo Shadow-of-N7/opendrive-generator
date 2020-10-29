@@ -46,6 +46,7 @@ def generate(out_path: str) -> None:
     # Road element
     road = SubElement(root, 'road')
     road.set('id', '1')
+    road.set('junction', "-1")
 
     # Link element
     SubElement(road, 'link')
