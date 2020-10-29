@@ -2,6 +2,7 @@
 
 import OpenDRIVE_API
 
+
 def test_generate():
     OpenDRIVE_API.generate_line(0, 5, 5, 15, 35)
     OpenDRIVE_API.generate_arc(55, 23, 345, 23, 12, 2)
@@ -9,5 +10,9 @@ def test_generate():
     OpenDRIVE_API.generate('C:\\test\\text.xodr')
 
 
-if __name__ == '__main__':
+def main():
     test_generate()
+
+
+if __name__ == '__main__':
+    main()

@@ -1,5 +1,10 @@
 # -*- coding: utf-8 -*-
 
+"""
+Responsible the code to .xodr file mapping. Thereof contains functions to generate track parts and finally compile them
+into the final .xodr file.
+"""
+
 import ValueValidators
 import datetime
 from xml.etree.ElementTree import Element, SubElement # , Comment, tostring, ElementTree
@@ -17,9 +22,11 @@ Find help regarding XML generation: https://pymotw.com/2/xml/etree/ElementTree/c
 reference_line_parts: List[Element] = []
 
 
-def generate(out_path):
+def generate(out_path: str) -> None:
     """
-    Generates the actual .xodr file.
+    Generates the actual .xodr file and saves it to the provided location.
+    :param out_path: The path to save the compiled file to. Note: The filename including the file ending needs to be
+    explicitly passed.
     """
     # Root element
     root = Element('OpenDRIVE')
@@ -74,6 +81,7 @@ def generate(out_path):
 
 def generate_line(s: float, x: float, y: float, hdg: float, length: float) -> None:
     """
+    Generates a straight reference line.
     :param s: s-coordinate of start position (m)
     :param x: Start position (x inertial) (m)
     :param y: Start position (y inertial) (m)
@@ -90,6 +98,7 @@ def generate_line(s: float, x: float, y: float, hdg: float, length: float) -> No
 
 def generate_arc(s: float, x: float, y: float, hdg: float, length: float, curvature: float) -> None:
     """
+    Generates an arcing reference line.
     :param s: s-coordinate of start position (m)
     :param x: Start position (x inertial) (m)
     :param y: Start position (y inertial) (m)
@@ -110,6 +119,7 @@ def generate_arc(s: float, x: float, y: float, hdg: float, length: float, curvat
 def generate_spiral(s: float, x: float, y: float, hdg: float, length: float, curv_start: float, curv_end: float) \
         -> None:
     """
+    Generates a spiraling reference line.
     :param s: s-coordinate of start position (m)
     :param x: Start position (x inertial) (m)
     :param y: Start position (y inertial) (m)
@@ -130,6 +140,15 @@ def generate_spiral(s: float, x: float, y: float, hdg: float, length: float, cur
 
 
 def __create_geometry(s, x, y, hdg, length) -> Element:
+    """
+    Internal: Creates the base geometry element required for each reference line segment
+    :param s: s-coordinate of start position (m)
+    :param x: Start position (x inertial) (m)
+    :param y: Start position (y inertial) (m)
+    :param hdg: Start orientation (inertial heading) (rad)
+    :param length: Length of the element’s reference line (m)
+    :return: The geometry element. The specific type element needs to be attached to this.
+    """
     element = Element('geometry')
     element.set('s', str(s))
     element.set('x', str(x))
