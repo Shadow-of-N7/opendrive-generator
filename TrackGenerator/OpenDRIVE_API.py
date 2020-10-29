@@ -6,6 +6,7 @@ import datetime
 from xml.etree.ElementTree import Element, SubElement, Comment, tostring, ElementTree
 import xml.dom.minidom
 import xml.etree.ElementTree as ET
+from typing import List
 
 """
 General Stuff:
@@ -14,7 +15,7 @@ Find help regarding XML generation: https://pymotw.com/2/xml/etree/ElementTree/c
 """
 
 # Stores the ref line parts as XML elements
-reference_line_parts = []
+reference_line_parts: List[Element] = []
 
 
 def generate(out_path):
@@ -53,9 +54,11 @@ def generate(out_path):
     planview = SubElement(road, 'planView')
 
     # Append all ref line parts to the planView element
+    street_length = 0
     for i in reference_line_parts:
         planview.append(i)
-        # TODO: Sum up all the lengths and insert them into the road alement
+        street_length += int(i.get(key='length'))
+    road.set('length', str(street_length))
 
     # Stringify
     xml_string = ET.tostring(root, encoding='unicode')
