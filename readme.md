@@ -12,3 +12,5 @@ The code of the generator is located inside the "TrackGenerator" directory.
 
 Code documentation is not delivered by default, but can be comiled by executing "GenerateDocumentation.ps1" inside the "TrackGenerator" directory using PowerShell.
 This will create a directory called "GeneratedDocumentation" inside the "TrackGenerator" directory, containing the documentation for each code file in HTML format.
+
+There is also a Linux version: Call "generateDocumentation.sh" in the same directory to generate documentation under Linux.
