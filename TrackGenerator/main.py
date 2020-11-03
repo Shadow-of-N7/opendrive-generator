@@ -15,20 +15,17 @@ def test_generate2():
     posX = 0
     posY = 0
     hdg = 0
-    OpenDRIVE_API.generate_line(s, posX, posY, hdg, length=10)
-    posX, posY, hdg, s = GeometryCalculator.CalculateLineEndpoints(s, posX, posY, hdg, 10)
+    OpenDRIVE_API.generate_arc(s, posX, posY, hdg, 15, 0.0872665)
+    posX, posY, hdg, s = GeometryCalculator.CalculateArcEndpoints(s, posX, posY, hdg, 15, 0.0872665)
 
-    OpenDRIVE_API.generate_line(s, posX, posY, hdg, length=20)
-    posX, posY, hdg, s = GeometryCalculator.CalculateLineEndpoints(s, posX, posY, hdg, 20)
+    OpenDRIVE_API.generate_arc(s, posX, posY, hdg, 20, -0.0872665)
+    posX, posY, hdg, s = GeometryCalculator.CalculateArcEndpoints(s, posX, posY, hdg, 20, -0.0872665)
 
-    OpenDRIVE_API.generate_arc(s, posX, posY, hdg, 15, math.radians(5))
-    posX, posY, hdg, s = GeometryCalculator.CalculateArcEndpoints(s, posX, posY, hdg, 15, 5)
+    OpenDRIVE_API.generate_arc(s, posX, posY, hdg, 15, 0.09)
+    posX, posY, hdg, s = GeometryCalculator.CalculateArcEndpoints(s, posX, posY, hdg, 15, 0.09)
 
-    OpenDRIVE_API.generate_line(s, posX, posY, hdg, length=10)
-    posX, posY, hdg, s = GeometryCalculator.CalculateLineEndpoints(s, posX, posY, hdg, 10)
-
-    OpenDRIVE_API.generate_arc(s, posX, posY, hdg, 15, math.radians(-5))
-    posX, posY, hdg, s = GeometryCalculator.CalculateArcEndpoints(s, posX, posY, hdg, 15, -5)
+    #OpenDRIVE_API.generate_line(s, posX, posY, hdg, length=10)
+    #posX, posY, hdg, s = GeometryCalculator.CalculateLineEndpoints(s, posX, posY, hdg, 10)
 
     OpenDRIVE_API.generate('E:\\Studium\\dev\\CARLA_0.9.10\\PythonAPI\\util\\opendrive\\test.xodr')
 
