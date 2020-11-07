@@ -65,7 +65,7 @@ def generate(out_path: str) -> None:
     street_length = 0
     for i in reference_line_parts:
         planview.append(i)
-        street_length += int(i.get(key='length'))
+        street_length += float(i.get(key='length'))
     road.set('length', str(street_length))
 
     # Lanes

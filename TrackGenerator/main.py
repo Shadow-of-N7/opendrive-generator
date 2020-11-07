@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import OpenDRIVE_API
+import TrackGenerator
 
 
 def test_generate():
@@ -11,7 +12,9 @@ def test_generate():
 
 
 def main():
-    test_generate()
+    #test_generate()
+
+    TrackGenerator.GenerateTrack(11, 30, 100, 20)
 
 
 if __name__ == '__main__':
