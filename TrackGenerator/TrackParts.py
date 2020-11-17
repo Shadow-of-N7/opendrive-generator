@@ -22,9 +22,17 @@ class Straight(TrackPart):
 
 class Arc(TrackPart):
     Curvature = 0.0
+    MiddlePoint = 0
 
     def __init__(self, startPoint, endPoint, curvature: float, length: float):
         self.Start = startPoint
         self.End = endPoint
         self.Length = length
         self.Curvature = curvature
+
+    def __init__(self, startPoint, endPoint, curvature: float, length: float, middlePoint=np.array([0, 0])):
+        self.Start = startPoint
+        self.End = endPoint
+        self.Length = length
+        self.Curvature = curvature
+        self.MiddlePoint = middlePoint
