@@ -11,6 +11,7 @@ from xml.etree.ElementTree import Element, SubElement # , Comment, tostring, Ele
 import xml.dom.minidom
 import xml.etree.ElementTree as Et
 from typing import List
+from dataclasses import dataclass
 
 """
 General Stuff:
@@ -18,8 +19,143 @@ The basic functions require 64-bit precision, which Pythons 'float' data type yi
 Find help regarding XML generation: https://pymotw.com/2/xml/etree/ElementTree/create.html
 """
 
+@dataclass
+class StreetSetting:
+    """
+    Class for storing street settings
+    """
+    road_type: str
+    lane_width: float
+
+    def __init__(self):
+        pass
+
+
 # Stores the ref line parts as XML elements
 reference_line_parts: List[Element] = []
+streets: List[List[Element]] = []
+street_settings: List[StreetSetting] = []
+
+# Ensure start_street is always followed by end_street
+street_open: bool = False
+
+
+def start_street(road_type: str='rural', lane_width: float=4.0) -> None:
+    """
+    Starts a new street and sets its settings.
+    :param road_type: The road type. Default: rural
+    :param lane_width: The width of each lane. Default: 4.0
+    :return: None
+    """
+
+    global street_open
+    if street_open:
+        raise Exception('You have an unclosed street! Cannot start another street.')
+    street_open = True
+    setting = StreetSetting()
+    setting.road_type = road_type
+    setting.lane_width = lane_width
+
+    street_settings.append(setting)
+
+def end_street() -> None:
+    """
+    Finalize a street, therefore completing it.
+    :return: None
+    """
+
+    global street_open
+    if not street_open:
+        raise Exception('You did not start a street! Cannot end a street which was never started.')
+    street_open = False
+
+    # Append a copy of our street to all streets
+    # then clear the original list
+    streets.append(reference_line_parts.copy())
+    reference_line_parts.clear()
+
+
+def _generate_streets(root: Element) -> None:
+    """
+    Generates all streets into an XML tree.
+    :param root: The root element of the XML tree.
+    :return: None
+    """
+
+    for street in streets:
+        street_num = streets.index(street)
+        # Road element
+        # Center line
+        road = SubElement(root, 'road')
+        road.set('id', str(street_num))
+        road.set('junction', "-1")
+
+        # Link element
+        SubElement(road, 'link')
+
+        # Type element
+        road_type = SubElement(road, 'type')
+        road_type.set('s', '0.0')  # TODO: Set s value based on real values
+        road_type.set('type', street_settings[street_num].road_type)
+        road_type.set('country', 'DE')
+
+        # PlanView element - Reference line starts here
+        planview = SubElement(road, 'planView')
+
+        # Append all ref line parts to the planView element
+        street_length = 0
+        for i in street:
+            planview.append(i)
+            street_length += int(i.get(key='length'))
+        # Set the combined length of all road segments
+        road.set('length', str(street_length))
+
+        # Lanes
+        lanes = SubElement(road, 'lanes')
+        lane_offset = SubElement(lanes, 'laneOffset')
+        lane_offset.set('s', '0.0')
+        lane_offset.set('a', '0.0')
+        lane_offset.set('b', '0.0')
+        lane_offset.set('c', '0.0')
+        lane_offset.set('d', '0.0')
+
+        # Lane section
+        lane_section = SubElement(lanes, 'laneSection')
+        lane_section.set('s', '0.0')
+
+        left = SubElement(lane_section, 'left')
+        center = SubElement(lane_section, 'center')
+        right = SubElement(lane_section, 'right')
+
+        left_lane = SubElement(left, 'lane')
+        left_lane.set('id', '1')
+        left_lane.set('type', 'driving')
+        left_lane.set('level', 'false')
+        SubElement(left_lane, 'link')
+        left_width = SubElement(left_lane, 'width')
+        left_width.set('sOffset', '0.0')
+        left_width.set('a', str(street_settings[street_num].lane_width))
+        left_width.set('b', '0.0')
+        left_width.set('c', '0.0')
+        left_width.set('d', '0.0')
+
+        center_lane = SubElement(center, 'lane')
+        center_lane.set('id', '0')
+        center_lane.set('type', 'none')
+        center_lane.set('level', 'false')
+        SubElement(center_lane, 'link')
+
+        right_lane = SubElement(right, 'lane')
+        right_lane.set('id', '-1')
+        right_lane.set('type', 'driving')
+        right_lane.set('level', 'false')
+        SubElement(right_lane, 'link')
+        right_width = SubElement(right_lane, 'width')
+        right_width.set('sOffset', '0.0')
+        right_width.set('a', str(street_settings[street_num].lane_width))
+        right_width.set('b', '0.0')
+        right_width.set('c', '0.0')
+        right_width.set('d', '0.0')
 
 
 def generate(out_path: str) -> None:
@@ -43,78 +179,8 @@ def generate(out_path: str) -> None:
     header.set('east', '0.0')
     header.set('west', '0.0')
 
-    # Road element
-    # Center line
-    road = SubElement(root, 'road')
-    road.set('id', '1')
-    road.set('junction', "-1")
-
-    # Link element
-    SubElement(road, 'link')
-
-    # Type element
-    road_type = SubElement(road, 'type')
-    road_type.set('s', '0.0') # TODO: Set s based on real values
-    road_type.set('type', 'rural')
-    road_type.set('country', 'DE')
-
-    # PlanView element - Reference line starts here
-    planview = SubElement(road, 'planView')
-
-    # Append all ref line parts to the planView element
-    street_length = 0
-    for i in reference_line_parts:
-        planview.append(i)
-        street_length += int(i.get(key='length'))
-    road.set('length', str(street_length))
-
-    # Lanes
-    lanes = SubElement(road, 'lanes')
-    lane_offset = SubElement(lanes, 'laneOffset')
-    lane_offset.set('s', '0.0')
-    lane_offset.set('a', '0.0')
-    lane_offset.set('b', '0.0')
-    lane_offset.set('c', '0.0')
-    lane_offset.set('d', '0.0')
-
-    # Lane section
-    lane_section = SubElement(lanes, 'laneSection')
-    lane_section.set('s', '0.0')
-
-    left = SubElement(lane_section, 'left')
-    center = SubElement(lane_section, 'center')
-    right = SubElement(lane_section, 'right')
-
-    left_lane = SubElement(left, 'lane')
-    left_lane.set('id', '1')
-    left_lane.set('type', 'driving')
-    left_lane.set('level', 'false')
-    SubElement(left_lane, 'link')
-    left_width = SubElement(left_lane, 'width')
-    left_width.set('sOffset', '0.0')
-    left_width.set('a', '4.0')
-    left_width.set('b', '0.0')
-    left_width.set('c', '0.0')
-    left_width.set('d', '0.0')
-
-    #TODO CENTER
-    center_lane = SubElement(center, 'lane')
-    center_lane.set('id', '0')
-    center_lane.set('type', 'none')
-    center_lane.set('level', 'false')
-    SubElement(center_lane, 'link')
-
-    right_lane = SubElement(right, 'lane')
-    right_lane.set('id', '-1')
-    right_lane.set('type', 'driving')
-    right_lane.set('level', 'false')
-    SubElement(right_lane, 'link')
-    right_width = SubElement(right_lane, 'width')
-    right_width.set('sOffset', '0.0')
-    right_width.set('a', '4.0')
-    right_width.set('b', '0.0')
-    right_width.set('c', '0.0')
-    right_width.set('d', '0.0')
+    # Generate all streets defined until now
+    _generate_streets(root)
 
 
     # Stringify
@@ -207,3 +273,5 @@ def __create_geometry(s, x, y, hdg, length) -> Element:
     element.set('hdg', str(hdg))
     element.set('length', str(length))
     return element
+
+
