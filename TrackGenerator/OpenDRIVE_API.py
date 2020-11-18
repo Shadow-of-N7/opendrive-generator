@@ -106,7 +106,7 @@ def _generate_streets(root: Element) -> None:
         street_length = 0
         for i in street:
             planview.append(i)
-            street_length += int(i.get(key='length'))
+            street_length += float(i.get(key='length'))
         # Set the combined length of all road segments
         road.set('length', str(street_length))
 
