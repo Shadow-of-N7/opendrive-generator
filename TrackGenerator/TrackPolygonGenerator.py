@@ -30,6 +30,7 @@ def generate_polygon(axes: matplotlib.axes.Axes, corner_count: int, max_width: i
     # Compute the (or a) 'center point' of the polygon
     center_point = [np.sum(x) / corner_count, np.sum(y) / corner_count]
 
+    # Generate the angle between each two points
     angles = np.arctan2(x - center_point[0], y - center_point[1])
 
     # Sort the points:
