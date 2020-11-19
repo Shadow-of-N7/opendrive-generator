@@ -1,13 +1,15 @@
-from typing import List, Tuple
-import numpy as np
-from matplotlib import pyplot as plt
-import matplotlib.axes
-from argparse import ArgumentParser
+# -*- coding: utf-8 -*-
 
 """
 Generates a polygon to be used as reference points for generating the track.
 Can be executed from the command line. Execute with '-h' parameter to get help.
 """
+
+from typing import List, Tuple
+import numpy as np
+from matplotlib import pyplot as plt
+import matplotlib.axes
+from argparse import ArgumentParser
 
 def generate_polygon(axes: matplotlib.axes.Axes, corner_count: int, max_width: int, max_height: int) \
         -> List[Tuple[int, int, float]]:
@@ -57,10 +59,10 @@ def generate_polygon(axes: matplotlib.axes.Axes, corner_count: int, max_width: i
 if __name__ == '__main__':
 
     parser = ArgumentParser()
-    parser.add_argument("-s", "--show-polygon", action='store_true', dest='show_polygon')
-    parser.add_argument("-x", "--width", action='store', dest='width', required=True, type=int)
-    parser.add_argument("-y", "--height", action='store', dest='height', required=True, type=int)
-    parser.add_argument("-c", "--corner-count", action='store', dest='corner_count', required=True, type=int)
+    parser.add_argument("-s", "--show-polygon", action='store_true', dest='show_polygon', help='Display a graphical representation of the polygon.')
+    parser.add_argument("-x", "--width", action='store', dest='width', required=True, type=int, help='The maximum width of the polygon.')
+    parser.add_argument("-y", "--height", action='store', dest='height', required=True, type=int, help='The maximum height of the polygon.')
+    parser.add_argument("-c", "--corner-count", action='store', dest='corner_count', required=True, type=int, help='The amount of corners the polygon shall have.')
 
     args = parser.parse_args()
 
