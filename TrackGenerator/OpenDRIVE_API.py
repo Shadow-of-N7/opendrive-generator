@@ -26,6 +26,7 @@ class StreetSetting:
     """
     road_type: str
     lane_width: float
+    road_name: str
 
     def __init__(self):
         pass
@@ -40,9 +41,10 @@ street_settings: List[StreetSetting] = []
 street_open: bool = False
 
 
-def start_street(road_type: str='rural', lane_width: float=4.0) -> None:
+def start_street(road_name: str, road_type: str='rural', lane_width: float=4.0) -> None:
     """
     Starts a new street and sets its settings.
+    :param road_name: Name of the road.
     :param road_type: The road type. Default: rural
     :param lane_width: The width of each lane. Default: 4.0
     :return: None
@@ -50,13 +52,16 @@ def start_street(road_type: str='rural', lane_width: float=4.0) -> None:
 
     global street_open
     if street_open:
-        raise Exception('You have an unclosed street! Cannot start another street.')
+        name = street_settings[len(street_settings) - 1].road_name
+        raise Exception('Street with name ' + name + ' has not been closed! Cannot start another street.')
     street_open = True
     setting = StreetSetting()
     setting.road_type = road_type
     setting.lane_width = lane_width
+    setting.road_name = road_name
 
     street_settings.append(setting)
+
 
 def end_street() -> None:
     """
@@ -66,7 +71,7 @@ def end_street() -> None:
 
     global street_open
     if not street_open:
-        raise Exception('You did not start a street! Cannot end a street which was never started.')
+        raise Exception('No street has been started! Cannot end a street which was never started.')
     street_open = False
 
     # Append a copy of our street to all streets
@@ -77,7 +82,7 @@ def end_street() -> None:
 
 def _generate_streets(root: Element) -> None:
     """
-    Generates all streets into an XML tree.
+    Exports all streets into an XML tree.
     :param root: The root element of the XML tree.
     :return: None
     """
