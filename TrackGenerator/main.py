@@ -25,7 +25,7 @@ def test_generate():
 def main():
     #test_generate()
 
-    TrackGenerator.GenerateTrack(11, 30, 100, 20)
+    TrackGenerator.GenerateTrack(11, 30, 100, 20, 'E:\\Studium\\dev\\CARLA_0.9.10\\PythonAPI\\util\\opendrive\\rundkurs.xodr')
 
 
 if __name__ == '__main__':

@@ -6,27 +6,27 @@ Responsible for creating a whole track. Makes sure to create a round course with
 
 import OpenDRIVE_API
 import TrackParts
-import MathUtils
 import math
 import random
 import matplotlib.pyplot as plt
 import numpy as np
 
 
-def GenerateTrack(segmentCount: int, minDist: float, maxDist: float, controlPointAbberation: float):
+def GenerateTrack(segmentCount: int, minDist: float, maxDist: float, controlPointAbberation: float, savePath: str):
     """
     Generates a whole track with no loose ends
     :param segmentCount: The amount of corner points in the track
     :param minDist: The minimum distance between the center and one control point
     :param maxDist: The maximum distance between the center and one control point
     :param controlPointAbberation: The maximum possible aberration of a control point from its calculated position in degrees.
+    :param savePath: Path where to save the resulting .xodr file
     :return: None
     """
     # List of control points defining the corner points of the track
     controlPoints = CreateControlPoints(segmentCount, minDist, maxDist, controlPointAbberation)
     tp = GetTrackParts(controlPoints)
-    ExportTrack2(tp)
-    PlotTrack2(tp)
+    ExportTrack(tp, savePath)
+    PlotTrack(tp)
 
 
 def CreateControlPoints(segmentCount: int, minDist: float, maxDist: float, controlPointAbberation: float):
@@ -62,11 +62,12 @@ def GetTrackParts(controlPoints):
         start = np.array(controlPoints[i])
         end = np.array(controlPoints[nextindex])
 
+        # Straight
         straightStart = VectorLerp(start, end, 0.1)
         straightEnd = VectorLerp(end, start, 0.1)
-
         tp.append(TrackParts.Straight(straightStart, straightEnd))
 
+        # Arc
         turnEnd = controlPoints[endturnindex]
         newTurnEnd = VectorLerp(end, turnEnd, 0.1)
         length = math.pi * np.linalg.norm(newTurnEnd - straightEnd) * 0.5
@@ -76,7 +77,9 @@ def GetTrackParts(controlPoints):
     return tp
 
 
-def ExportTrack2(trackParts):
+def ExportTrack(trackParts, savePath: str):
+    OpenDRIVE_API.start_street('rural', lane_width=4.0)
+
     s = 0
     for i in range(len(trackParts)):
         nexti = (i + 1) % len(trackParts)
@@ -91,10 +94,11 @@ def ExportTrack2(trackParts):
 
         s += t.Length
 
-    OpenDRIVE_API.generate('E:\\Studium\\dev\\CARLA_0.9.10\\PythonAPI\\util\\opendrive\\rundkurs.xodr')
+    OpenDRIVE_API.end_street()
+    OpenDRIVE_API.generate(savePath)
 
 
-def PlotTrack2(trackParts):
+def PlotTrack(trackParts):
     xvStraight = []
     yvStraight = []
     xvArc = []
@@ -122,5 +126,4 @@ def VectorLerp(A, B, amount: float):
 
     normal = V * (np.array([1, 1, 1]) / np.linalg.norm(V))
     distance = np.linalg.norm(B - A)
-    result = A + normal * (distance * amount)
-    return result
+    return A + normal * (distance * amount)
