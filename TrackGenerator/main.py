@@ -5,10 +5,21 @@ import TrackGenerator
 
 
 def test_generate():
-    OpenDRIVE_API.generate_line(0, 5, 5, 15, 35)
-    OpenDRIVE_API.generate_arc(55, 23, 345, 23, 12, 2)
-    OpenDRIVE_API.generate_spiral(12, 34, 32, 12, 34, 1, 4)
-    OpenDRIVE_API.generate('C:\\test\\text.xodr')
+    OpenDRIVE_API.start_street()
+    OpenDRIVE_API.generate_line(0, -10, 0, 0, 30)
+    OpenDRIVE_API.generate_arc(20, 50, 0, 0, 100, 0.063)
+    OpenDRIVE_API.generate_line(70,18,32,110,20)
+    OpenDRIVE_API.generate_arc(90, -10, 33, 600, 50, 0.063)
+    OpenDRIVE_API.end_street()
+
+    OpenDRIVE_API.start_street(road_type='foo')
+    OpenDRIVE_API.generate_line(0, -105, 0, 0, 35)
+    OpenDRIVE_API.generate_arc(20, 50, 15, 0, 100, 0.063)
+    OpenDRIVE_API.generate_line(70, 34, 32, 110, 20)
+    OpenDRIVE_API.generate_arc(90, -10, 33, 40, 50, 0.063)
+    OpenDRIVE_API.end_street()
+
+    OpenDRIVE_API.generate('C:\\test\\circle1_2.xodr')
 
 
 def main():
