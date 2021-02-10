@@ -14,25 +14,25 @@ class TrackPart:
 
 
 class Straight(TrackPart):
-    def __init__(self, startPoint, endPoint):
-        self.Start = startPoint
-        self.End = endPoint
-        self.Length = np.linalg.norm(endPoint - startPoint)
+    def __init__(self, start_point, end_point):
+        self.Start = start_point
+        self.End = end_point
+        self.Length = np.linalg.norm(end_point - start_point)
 
 
 class Arc(TrackPart):
     Curvature = 0.0
     MiddlePoint = 0
 
-    def __init__(self, startPoint, endPoint, curvature: float, length: float):
-        self.Start = startPoint
-        self.End = endPoint
+    def __init__(self, start_point, end_point, curvature: float, length: float):
+        self.Start = start_point
+        self.End = end_point
         self.Length = length
         self.Curvature = curvature
 
-    def __init__(self, startPoint, endPoint, curvature: float, length: float, middlePoint=np.array([0, 0])):
-        self.Start = startPoint
-        self.End = endPoint
+    def __init__(self, start_point, end_point, curvature: float, length: float, middle_point=np.array([0, 0])):
+        self.Start = start_point
+        self.End = end_point
         self.Length = length
         self.Curvature = curvature
-        self.MiddlePoint = middlePoint
+        self.MiddlePoint = middle_point

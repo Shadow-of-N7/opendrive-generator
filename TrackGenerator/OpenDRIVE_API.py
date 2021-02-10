@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
 """
-Responsible the code to .xodr file mapping. Thereof contains functions to generate track parts and finally compile them
-into the final .xodr file.
+Responsible for the code to .xodr file mapping.
+Thereof contains functions to generate track parts and finally compile them into the final .xodr file.
 """
 
 import ValueValidators

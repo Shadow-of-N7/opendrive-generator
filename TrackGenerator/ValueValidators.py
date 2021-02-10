@@ -5,6 +5,7 @@ Provides functions to check whether values are within a defined range.
 If those are not, the functions generally raise a ValueError.
 """
 
+
 def validate_greater_equal_zero(value: float) -> None:
     """
     Validates a given number is greater or equal to zero.
