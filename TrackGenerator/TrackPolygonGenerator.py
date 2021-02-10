@@ -122,7 +122,7 @@ def trim_lines(lines: List[Line]):
         if this_center_scaled_length == next_center_scaled_length:
             lines[i].scale_at_2(scale / 2)
             lines[i + 1].scale_at_1(scale / 2)
-        # print('Old: ' + str(original_lines[i].get_length()) + '\tNew: ' + str(lines[i].get_length()))
+        print('Old: ' + str(original_lines[i].get_length()) + '\tNew: ' + str(lines[i].get_length()))
         print('Shortened lengths: this: ' + str(lines[i].get_length()) + ', Next: ' + str(lines[i + 1].get_length()))
 
 def calculate_curve_center_points(corner_tuples: List[Tuple[int, int, float]], axes: matplotlib.axes.Axes):
