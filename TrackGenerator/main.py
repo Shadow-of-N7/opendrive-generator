@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import OpenDRIVE_API
+import TrackGenerator
 
 
 def test_generate():
@@ -22,7 +23,9 @@ def test_generate():
 
 
 def main():
-    test_generate()
+    #test_generate()
+
+    TrackGenerator.GenerateTrack(11, 30, 100, 20, 'E:\\Studium\\dev\\CARLA_0.9.10\\PythonAPI\\util\\opendrive\\rundkurs.xodr')
 
 
 if __name__ == '__main__':
