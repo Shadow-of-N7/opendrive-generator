@@ -1,0 +1,10 @@
+# PyCharm virtual environment
+venv/
+# Python cache files
+__pycache__/
+
+# Self-generated documentation
+GeneratedDocumentation
+
+# PyCharm settings and stuff
+.idea/
