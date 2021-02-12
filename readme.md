@@ -41,3 +41,7 @@ Additionally, the generated polygon can be diplayed graphically by setting the `
 Generating polygons from the command line does NOT save them anywhere. It merely provides a simple way to get a feeling for good values to use with the generator.
 
 ![Figure_1](/uploads/4607a15e03fbe66a5cd1d16498f0be1a/Figure_1.png)
+
+## License Note:
+
+Thie project is provided unter MIT license ![MIT License Logo](/uploads/bc9f634c577db82a0d9a4292734a026c/91196268-63b5-4881-9885-a0e367829332.png "MIT License Logo"). See LICENSE file for additional information.
