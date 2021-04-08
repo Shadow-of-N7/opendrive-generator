@@ -1,6 +1,6 @@
 # OpenDRIVE Map Generator
 
-This is a genenerator for race tracks within the [CARLA Simulator](https://carla.org/). It's not perfect yet, as curves are not connecting seemlessly to other track parts. Everything is implemented in accordance with the [OpenDRIVE 1.6 standard](https://releases.asam.net/OpenDRIVE/1.6.0/ASAM_OpenDRIVE_BS_V1-6-0.html).
+This is a generator for race tracks within the [CARLA Simulator](https://carla.org/). It's not perfect yet, as curves are not connecting seemlessly to other track parts. Everything is implemented in accordance with the [OpenDRIVE 1.6 standard](https://releases.asam.net/OpenDRIVE/1.6.0/ASAM_OpenDRIVE_BS_V1-6-0.html).
 
 To integrate this into the CARLA simulator, just copy everything into the CARLA main directory.
 
